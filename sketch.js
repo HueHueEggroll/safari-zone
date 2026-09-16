@@ -57,15 +57,11 @@ function draw() {
   if (gamePhase === "intro") {
     introTimer += 1;
 
-    if (introTimer <= 60) {
-      playerX = map(introTimer, 0, 60, 700, 150);
-      pokemonX = map(introTimer, 0, 60, -200, 375);
-      introOverlayAlpha = 255;
-    } else if (introTimer > 60 && introTimer <= 120) {
-      playerX = 150;
-      pokemonX = 375;
-      introOverlayAlpha = map(introTimer, 60, 120, 255, 0);
-    }
+    if (introTimer <= 120) {
+      playerX = map(introTimer, 0, 120, 700, 150);
+      pokemonX = map(introTimer, 0, 120, -200, 375);
+      introOverlayAlpha = map(introTimer, 110, 120, 255, 0);
+    } else if (introTimer)
 
     if (introTimer >= 120) {
       gamePhase = "battle";
@@ -173,7 +169,7 @@ function playTurn(playerAction) {
     }
   } 
   else if (playerAction === "bait") {
-    pMudTurns = 0;
+    pRockTurns = 0;
     pBaitTurns = floor(random(2, 7));
     pCurrentCatch = floor(pBaseCatch / 2);
     pCurrentFlee = floor(pBaseFlee / 2);
