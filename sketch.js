@@ -13,6 +13,8 @@ let introTimer = 0;
 
 let playerX = 700;
 let pokemonX = -200;
+let pokemonInfo = -200;
+let safariBallCount = 700;
 let introOverlayAlpha = 255;
 
 let pName = "";
@@ -61,9 +63,26 @@ function draw() {
       playerX = map(introTimer, 0, 120, 700, 150);
       pokemonX = map(introTimer, 0, 120, -200, 375);
       introOverlayAlpha = map(introTimer, 110, 120, 255, 0);
-    } else if (introTimer)
 
-    if (introTimer >= 120) {
+      pokemonInfo = -200;
+      safariBallCount = 700;
+    } else if (introTimer > 120 && introTimer <= 135) {
+      playerX = 150;
+      pokemonX = 375;
+      introOverlayAlpha = 0;
+
+      pokemonInfo = map(introTimer, 120, 135, -225, 80);
+      safariBallCount = 725;
+    } else if (introTimer > 140 && introTimer <= 180) {
+      playerX = 150;
+      pokemonX = 375;
+      introOverlayAlpha = 0;
+      pokemonInfo = 80;
+
+      safariBallCount = map(introTimer, 160, 180, 725, 420);
+    }
+
+    if (introTimer >= 180) {
       gamePhase = "battle";
     }
   } else if (gamePhase === "battle") {
@@ -84,20 +103,34 @@ function draw() {
   // Pokemon ground
   ellipse(pokemonX, 150, 240, 70);
 
-  // Textbox
+  // Main Textbox
   stroke(0);
   strokeWeight(5);
   fill(255);
   rectMode(CENTER);
   rect(250, 340, 495, 120, 10);
 
-  // Textbox text
+  // Main Textbox text
   noStroke();
   fill(0);
   textAlign(LEFT, TOP);
   textSize(20);
   text(gameMessage, 20, 300);
 
+  // Pokemon Info
+  stroke(0);
+  strokeWeight(2);
+  fill(255);
+  rectMode(CENTER);
+  rect(pokemonInfo, 80, 225, 60, 10);
+
+  // Safari Ball Count
+  stroke(0);
+  strokeWeight(2);
+  fill(255);
+  rect(CENTER);
+  rect(safariBallCount, 200, 225, 60, 10);
+  
   if (introOverlayAlpha > 0) {
     rectMode(CENTER);
     fill(0, 0, 0, introOverlayAlpha);
