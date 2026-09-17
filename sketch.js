@@ -8,14 +8,53 @@
 // text reaction
 // return to default text
 
+let introStage1End = 120;
+let introStage2End = 140;
+let introTotalEnd = 180;
+
+let playerStartX = 700;
+let playerTargetX = 150;
+let playerFloorY = 280;
+let trainerW = 70;
+let trainerH = 110;
+let trainerOffsetY = 210;
+let trainerImg;
+
+let pokemonStartX = -200;
+let pokemonTargetX = 375;
+let pokemonFloorY = 150;
+let pokemonW = 90;
+let pokemonH = 90;
+let pokemonOffsetY = 110;
+let pokemonImg;
+
+let hudInfoStartX = -225;
+let hudInfoTargetX = 80;
+let hudInfoY = 80;
+
+let hudBallStartX = 725;
+let hudBallTargetX = 420;
+let hudBallY = 200;
+
+let textBoxW = 495;
+let textBoxH = 120;
+let mainTextBoxY = 340;
+let textOffsetY = 300;
+
+let hudBoxW = 225;
+let hudBoxH = 60;
+
+let maxInputAlpha = 200;
+
 let gamePhase = "intro";
 let introTimer = 0;
 
-let playerX = 700;
-let pokemonX = -200;
-let pokemonInfo = -200;
-let safariBallCount = 700;
+let playerX = playerStartX;
+let pokemonX = pokemonStartX;
+let pokemonInfo = hudInfoStartX;
+let safariBallCount = hudBallStartX;
 let introOverlayAlpha = 255;
+let inputOverlayAlpha = maxInputAlpha;
 
 let pName = "";
 let pBaseCatch = 0;
@@ -59,27 +98,32 @@ function draw() {
   if (gamePhase === "intro") {
     introTimer += 1;
 
-    if (introTimer <= 120) {
-      playerX = map(introTimer, 0, 120, 700, 150);
-      pokemonX = map(introTimer, 0, 120, -200, 375);
-      introOverlayAlpha = map(introTimer, 110, 120, 255, 0);
-
-      pokemonInfo = -200;
-      safariBallCount = 700;
-    } else if (introTimer > 120 && introTimer <= 135) {
-      playerX = 150;
-      pokemonX = 375;
+    if (introTimer <= introStage1End) {
+      playerX = map(introTimer, 0, introStage1End, playerStartX, playerTargetX);
+      pokemonX = map(introTimer, 0, introStage1End, pokemonStartX, pokemonTargetX);
+      introOverlayAlpha = map(introTimer, 110, introStage1End, 255, 0);
+      
+      pokemonInfo = hudInfoStartX;
+      safariBallCount = hudBallStartX;
+      inputOverlayAlpha = maxInputAlpha;
+    } 
+    else if (introTimer > introStage1End && introTimer <= introStage2End) {
+      playerX = playerTargetX;
+      pokemonX = pokemonTargetX;
       introOverlayAlpha = 0;
 
-      pokemonInfo = map(introTimer, 120, 135, -225, 80);
-      safariBallCount = 725;
-    } else if (introTimer > 140 && introTimer <= 180) {
-      playerX = 150;
-      pokemonX = 375;
+      pokemonInfo = map(introTimer, introStage1End, introStage2End, hudInfoStartX, hudInfoTargetX);
+      safariBallCount = hudBallStartX;
+      inputOverlayAlpha = maxInputAlpha;
+    } 
+    else if (introTimer > introStage2End && introTimer <= introTotalEnd) {
+      playerX = playerTargetX;
+      pokemonX = pokemonTargetX;
       introOverlayAlpha = 0;
-      pokemonInfo = 80;
+      pokemonInfo = hudInfoTargetX;
 
-      safariBallCount = map(introTimer, 160, 180, 725, 420);
+      safariBallCount = map(introTimer, 160, introTotalEnd, hudBallStartX, hudBallTargetX);
+      inputOverlayAlpha = maxInputAlpha;
     }
 
     if (introTimer >= 180) {
@@ -87,8 +131,12 @@ function draw() {
     }
   } else if (gamePhase === "battle") {
     // battle behavior 
-    playerX = 150;
-    pokemonX = 375;
+    playerX = playerTargetX;
+    pokemonX = pokemonTargetX;
+    pokemonInfo = hudInfoTargetX;
+    safariBallCount = hudBallTargetX;
+    introOverlayAlpha = 0;
+    inputOverlayAlpha = 0;
   }
 
   ballButton.display();
@@ -98,45 +146,71 @@ function draw() {
 
   // Player ground
   fill(0, 100, 0);
-  ellipse(playerX, 280, 320, 90);
+  ellipse(playerX, playerFloorY, 320, 90);
 
   // Pokemon ground
-  ellipse(pokemonX, 150, 240, 70);
+  ellipse(pokemonX, pokemonFloorY, 240, 70);
+
+  // Trainer sprite
+  fill(50, 50, 200);
+  rect(playerX, trainerOffsetY, trainerW, trainerH);
+
+  if (gamePhase === "intro" && introTimer <= introStage1End) {
+    fill(50);
+  } else {
+    fill (230, 130, 40);
+  }
+  rect(pokemonX, pokemonOffsetY, pokemonW, pokemonH);
 
   // Main Textbox
   stroke(0);
   strokeWeight(5);
   fill(255);
   rectMode(CENTER);
-  rect(250, 340, 495, 120, 10);
+  rect(width / 2, mainTextBoxY, textBoxW, textBoxH, 10);
 
   // Main Textbox text
   noStroke();
   fill(0);
   textAlign(LEFT, TOP);
   textSize(20);
-  text(gameMessage, 20, 300);
+  text(gameMessage, 20, textOffsetY);
 
   // Pokemon Info
   stroke(0);
   strokeWeight(2);
   fill(255);
   rectMode(CENTER);
-  rect(pokemonInfo, 80, 225, 60, 10);
+  rect(pokemonInfo, hudInfoY, hudBoxW, hudBoxH, 10);
 
   // Safari Ball Count
   stroke(0);
   strokeWeight(2);
   fill(255);
   rect(CENTER);
-  rect(safariBallCount, 200, 225, 60, 10);
+  rect(safariBallCount, hudBallY, hudBoxW, hudBoxH, 10);
   
+  if (gamePhase === "battle" && !isGameOver) {
+    if (floor(frameCount / 20) % 2 === 0) {
+      fill (200, 0, 0);
+      noStroke();
+      triangle(465, 375, 480, 375, 472, 385);
+    }
+  }
+
   if (introOverlayAlpha > 0) {
     rectMode(CENTER);
     fill(0, 0, 0, introOverlayAlpha);
     stroke(0, introOverlayAlpha);
     strokeWeight(5);
-    rect(250, 340, 495, 120, 10);
+    rect(width / 2, mainTextBoxY, textBoxW, textBoxH, 10);
+  }
+
+  if (inputOverlayAlpha > 0) {
+    rectMode(CORNER);
+    fill(40, 40, 40, inputOverlayAlpha);
+    noStroke();
+    rect(0, 400, width, height - 400);
   }
 }
 
@@ -178,6 +252,7 @@ function startEncounter(pokemonData) {
   gamePhase = "intro";
   introTimer = 0;
   introOverlayAlpha = 255;
+  inputOverlayAlpha = 150;
 
   gameMessage = "A wild " + pName + " appeared!";
 }
