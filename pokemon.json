@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Nidoran♀",
+    "image": "assets/nidoran_f.png",
+    "baseCatchRate": 235,
+    "baseFleeRate": 50,
+    "animDuration": 60,
+    "minLevel": 20,
+    "maxLevel": 22,
+    "weight": 30
+  },
+  {
+    "name": "Nidoran♂",
+    "image": "assets/nidoran_m.png",
+    "baseCatchRate": 235,
+    "baseFleeRate": 50,
+    "animDuration": 60,
+    "minLevel": 20,
+    "maxLevel": 22,
+    "weight": 30
+  },
+  {
+    "name": "Exeggcute",
+    "image": "assets/exeggcute.png",
+    "baseCatchRate": 90,
+    "baseFleeRate": 60,
+    "animDuration": 70,
+    "minLevel": 22,
+    "maxLevel": 26,
+    "weight": 20
+  },
+  {
+    "name": "Rhyhorn",
+    "image": "assets/rhyhorn.png",
+    "baseCatchRate": 120,
+    "baseFleeRate": 75,
+    "animDuration": 75,
+    "minLevel": 20,
+    "maxLevel": 26,
+    "weight": 20
+  },
+  {
+    "name": "Dratini",
+    "image": "assets/dratini.png",
+    "baseCatchRate": 45,
+    "baseFleeRate": 60,
+    "animDuration": 70,
+    "minLevel": 15,
+    "maxLevel": 25,
+    "weight": 15
+  },
+  {
+    "name": "Tauros",
+    "image": "assets/tauros.png",
+    "baseCatchRate": 45,
+    "baseFleeRate": 90,
+    "animDuration": 90,
+    "minLevel": 25,
+    "maxLevel": 35,
+    "weight": 10
+  },
+  {
+    "name": "Scyther",
+    "image": "assets/scyther.png",
+    "baseCatchRate": 45,
+    "baseFleeRate": 105,
+    "animDuration": 80,
+    "minLevel": 23,
+    "maxLevel": 28,
+    "weight": 10
+  },
+  {
+    "name": "Pinsir",
+    "image": "assets/pinsir.png",
+    "baseCatchRate": 45,
+    "baseFleeRate": 105,
+    "animDuration": 80,
+    "minLevel": 23,
+    "maxLevel": 28,
+    "weight": 10
+  },
+  {
+    "name": "Kangaskhan",
+    "image": "assets/kangaskhan.png",
+    "baseCatchRate": 45,
+    "baseFleeRate": 90,
+    "animDuration": 85,
+    "minLevel": 25,
+    "maxLevel": 30,
+    "weight": 5
+  },
+  {
+    "name": "Chansey",
+    "image": "assets/chansey.png",
+    "baseCatchRate": 30,
+    "baseFleeRate": 120,
+    "animDuration": 90,
+    "minLevel": 26,
+    "maxLevel": 30,
+    "weight": 5
+  }
+]

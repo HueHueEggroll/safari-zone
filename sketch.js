@@ -1,3 +1,5 @@
+let pokemonData;
+
 // Sprites
 let trainerImg, pokemonImg, ballImg, baitImg, rockImg;
 
@@ -18,9 +20,9 @@ let trainerOffsetY = 210;
 let pokemonStartX = -200;
 let pokemonTargetX = 375;
 let pokemonFloorY = 175;
-let pokemonW = 90;
-let pokemonH = 90;
-let pokemonOffsetY = 135;
+let pokemonW = 150;
+let pokemonH = 150;
+let pokemonOffsetY = 130;
 
 // HUD positioning and dimensions
 let hudSlideSpeed = 20;
@@ -129,7 +131,7 @@ let runButton;
 
 // Load external image assets and Pokemon data
 function preload() {
-  // externalDatabase = loadJSON("pokemon.json")
+  pokemonData = loadJSON("pokemon.json")
 
   trainerImg = loadImage("assets/trainer.png");
   // pokemonImg = loadImage("assets/")
@@ -141,6 +143,15 @@ function preload() {
 function setup() {
   createCanvas(500, 800);
 
+  // Convert Pokemon JSON list to array
+  let pokemonList = Object.values(pokemonData);
+
+  // Pick weighted random entry
+  let wildPokemon = getRandomWeightedPokemon(pokemonList);
+
+  // Start encounter sequence
+  startEncounter(wildPokemon);
+
   // Fallback graphics
   let defaultPlaceholder = createGraphics(24, 24);
   defaultPlaceholder.background(150);
@@ -150,8 +161,8 @@ function setup() {
   if (!rockImg) rockImg = defaultPlaceholder;
 
   // Test pokemon data
-  let mockData = { name: "Tauros", baseCatchRate: 255, baseFleeRate: 90, animDuration: 90, minLevel: 25, maxLevel: 35 };
-  startEncounter(mockData);
+  // let mockData = { name: "Tauros", baseCatchRate: 255, baseFleeRate: 90, animDuration: 90, minLevel: 25, maxLevel: 35 };
+  // startEncounter(mockData);
 
   // Initialize UI buttons
   ballButton = new Button(250, 575, 225, 150, "BALL", "ball", 200, 0, 0, 250, 575);
@@ -300,11 +311,42 @@ function updatePhases() {
   }
 }
 
+// Calculate total weight sum across all Pokemon entries
+function getTotalWeight(list) {
+  let total = 0;
+  for (let i = 0; i < list.length; i++) {
+    total += list[i].weight || 1; // Default to 1 if weight is omitted
+  }
+  return total;
+}
+
+// Select an item based on weighted probability
+function getRandomWeightedPokemon(list) {
+  let totalWeight = getTotalWeight(list);
+  let roll = random(0, totalWeight);
+  let currentSum = 0;
+
+  for (let i = 0; i < list.length; i++) {
+    currentSum += list[i].weight || 1;
+    if (roll < currentSum) {
+      return list[i];
+    }
+  }
+
+  return list[0]; // Fallback
+}
+
 // Reset stats and initialize variables for new wild encounter
 function startEncounter(pokemonData) {
   pName = pokemonData.name;
   pBaseCatch = pokemonData.baseCatchRate;
   pBaseFlee = pokemonData.baseFleeRate;
+
+  if (pokemonData.image) {
+    pokemonImg = loadImage(pokemonData.image);
+  } else {
+    pokemonImg = null;
+  }
 
   // Determine level within species range
   let minLvl = pokemonData.minLevel || 30;
@@ -629,13 +671,27 @@ function drawGroundAndSprites() {
 
   // Pokemon sprite
   if (!pokemonCaptured) {
-    rectMode(CENTER);
-    if (gamePhase === "intro" && introTimer <= introStage1End) {
-      fill(50);
+    if (pokemonImg) {
+      push();
+      imageMode(CENTER);
+      // Tint gray during opening phase
+      if (gamePhase === "intro" && introTimer <= introStage1End) {
+        tint(50);
+      } else {
+        noTint();
+      }
+      image(pokemonImg, pokemonX, pokemonOffsetY, pokemonW, pokemonH);
+      pop();
     } else {
-      fill(230, 130, 40);
+      // Fallback placeholder
+      rectMode(CENTER);
+      if (gamePhase === "intro" && introTimer <= introStage1End) {
+        fill(50);
+      } else {
+        fill(230, 130, 40);
+      }
+      rect(pokemonX, pokemonOffsetY, pokemonW, pokemonH);
     }
-    rect(pokemonX, pokemonOffsetY, pokemonW, pokemonH);
   }
 
   // Trainer sprite
